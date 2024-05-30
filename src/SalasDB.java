@@ -2,35 +2,35 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DepartamentosDB  {
+public class SalasDB {
     protected static int error;
-    public static boolean añadirDep(Departamento dep) {
+    public static boolean añadirSala(Sala sala){
         try {
-            String sql = "insert into Departamentos (cod_dep,nombre) values (?,?)";
+            String sql = "insert into Salas (cod_sala,nombre) values (?,?)";
             PreparedStatement ps = AdminConexion.con.prepareStatement(sql);
-            ps.setString(1,dep.getCod_dep());
-            ps.setString(2,dep.getNombre());
+            ps.setString(1,sala.getCod());
+            ps.setString(2,sala.getNombre());
             ps.executeUpdate();
             error=InfoError.OK;
             return true;
         }catch (SQLException sqle){
             if(sqle.getMessage().contains("PRIMARY")){
-                error=5;
+                error=InfoError.DUPLICADO_COD_SAL;
             } else if (sqle.getMessage().contains("uk1")) {
-                error=InfoError.DUPLICADO_NOMBRE;
+                error=InfoError.DUPLICADO_NOMBRE_sala;
             } else {
                 error = InfoError.ERRPR_RECOGER_DATOS;
             }
             return false;
         }
     }
-    public static void listardep(){
+    public static void listarSal(){
         try {
-            Departamento aux=new Departamento("","");
-            PreparedStatement ps=AdminConexion.con.prepareStatement("SELECT cod_dep,nombre from departamentos");
+            Sala aux=new Sala("","");
+            PreparedStatement ps=AdminConexion.con.prepareStatement("SELECT cod_sala,nombre from salas");
             ResultSet rs=ps.executeQuery();
             while (rs.next()){
-                aux.setCod_dep(rs.getString("cod_dep"));
+                aux.setCod(rs.getString("cod_sala"));
                 aux.setNombre(rs.getString("nombre"));
                 System.out.println(aux);
             }
@@ -41,9 +41,9 @@ public class DepartamentosDB  {
             InfoError.getMensaje(error);
         }
     }
-    public static boolean eliminarDep(String cod){
+    public static boolean eliminarSal(String cod){
         try {
-            PreparedStatement ps=AdminConexion.con.prepareStatement("delete from departamentos where cod_dep=?");
+            PreparedStatement ps=AdminConexion.con.prepareStatement("delete from salas where cod_sala=?");
             ps.setString(1,cod);
             if(ps.executeUpdate()==1){
                 error=InfoError.OK;

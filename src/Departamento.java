@@ -21,4 +21,9 @@ public class Departamento {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return "COD_DEP: "+cod_dep+" Nombre: "+nombre;
+    }
 }
